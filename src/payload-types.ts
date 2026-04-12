@@ -151,6 +151,10 @@ export interface User {
 export interface Model {
   id: number;
   title: string;
+  /**
+   * Checked automatically after optimization finishes. Optimization is run automatically after upload.
+   */
+  optimized?: boolean | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -288,6 +292,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface ModelsSelect<T extends boolean = true> {
   title?: T;
+  optimized?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

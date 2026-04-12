@@ -1,23 +1,31 @@
 'use client'
-
-import { ReactElement, Suspense, useEffect, useRef, useState } from 'react'
+import { ReactElement, Suspense, useEffect, useRef, useState, useCallback } from 'react'
 import { Model } from '@/payload-types'
 import { motion } from 'motion/react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stage, useGLTF } from '@react-three/drei'
-import { formatListDrawerSlug } from '@payloadcms/ui/elements/ListDrawer'
+import { OrbitControls, useGLTF, Center, Bounds } from '@react-three/drei'
 
 export type ModelCarouselProps = {
 	models: Model[]
 }
 
+function PreloadModels({ models }: { models: Model[] }) {
+	useEffect(() => {
+		models.forEach((m) => {
+			if (m.url) useGLTF.preload(m.url)
+		})
+	}, [models])
+	return null
+}
+
 export default function ModelCarousel({ models }: ModelCarouselProps): ReactElement {
 	const [index, setIndex] = useState(0)
-	let isScrolling = useRef(false)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [slideWidth, setSlideWidth] = useState(0)
-
 	const maxIndex = models.length - 1
+	const isScrolling = useRef(false)
+	const deltaAccumulator = useRef(0)
+	const SCROLL_THRESHOLD = 50
 
 	useEffect(() => {
 		const updateWidth = () => {
@@ -26,46 +34,80 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 		updateWidth()
 		window.addEventListener('resize', updateWidth)
 		return () => window.removeEventListener('resize', updateWidth)
-	})
+	}, [])
+
+	const handleWheel = useCallback(
+		(e: React.WheelEvent) => {
+			e.preventDefault()
+			if (!slideWidth) return
+			if (isScrolling.current) return
+			deltaAccumulator.current += e.deltaY
+			if (Math.abs(deltaAccumulator.current) < SCROLL_THRESHOLD) return
+			const direction = deltaAccumulator.current > 0 ? 1 : -1
+			deltaAccumulator.current = 0
+			isScrolling.current = true
+			setIndex((prev) => Math.min(Math.max(prev + direction, 0), maxIndex))
+			setTimeout(() => {
+				isScrolling.current = false
+			}, 700)
+		},
+		[slideWidth, maxIndex],
+	)
+
+	const currentModel = models[index]
 
 	return (
 		<div
 			ref={containerRef}
 			className="ModelCarouselWrapper"
-			style={{ overflow: 'hidden', width: '100%', height: '100%' }}
+			onWheel={handleWheel}
+			style={{ overflow: 'hidden', width: '100%', height: '100%', position: 'relative' }}
 		>
+			<PreloadModels models={models} />
+
+			{/* Single shared Canvas — never unmounts, no context limit issues */}
+			<div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+				<Canvas
+					camera={{ position: [0, 0, 5], fov: 50 }}
+					gl={{ antialias: true, powerPreference: 'high-performance' }}
+					dpr={[1, 1.5]}
+				>
+					<ambientLight intensity={3} />
+					<directionalLight position={[5, 10, 5]} intensity={4} castShadow={false} />
+					<directionalLight position={[-5, 5, -5]} intensity={2} />
+					<Suspense fallback={null}>
+						{currentModel?.url && (
+							<Bounds fit clip observe key={currentModel.url}>
+								<Center>
+									<GLTFModel url={currentModel.url} />
+								</Center>
+							</Bounds>
+						)}
+						<OrbitControls
+							autoRotate
+							autoRotateSpeed={3}
+							enablePan={false}
+							enableZoom={false}
+							enableRotate={false}
+						/>
+					</Suspense>
+				</Canvas>
+			</div>
+
+			{/* Slide UI overlay — handles scroll and shows titles */}
 			<motion.div
 				className="ModelCarousel"
-				onWheel={(e) => {
-					e.preventDefault()
-
-					if (!slideWidth) return
-					if (isScrolling.current) return
-					isScrolling.current = true
-
-					setIndex((prev) => {
-						return e.deltaY > 0 ? Math.min(prev + 1, maxIndex) : Math.max(prev - 1, 0)
-					})
-
-					setTimeout(() => {
-						isScrolling.current = false
-					}, 500)
-				}}
 				style={{
 					display: 'flex',
 					height: '100%',
+					position: 'relative',
+					zIndex: 1,
 				}}
-				animate={{
-					x: index * -slideWidth,
-				}}
-				transition={{
-					type: 'spring',
-					stiffness: 120,
-					damping: 20,
-				}}
+				animate={{ x: index * -slideWidth }}
+				transition={{ type: 'spring', stiffness: 300, damping: 35 }}
 			>
 				{models.map(
-					(model, index) =>
+					(model) =>
 						model.url && (
 							<motion.div
 								key={model.url}
@@ -74,38 +116,15 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 									height: '100%',
 									padding: '1rem',
 									boxSizing: 'border-box',
+									pointerEvents: 'none',
 								}}
 							>
 								<h2>{model.title}</h2>
-								<CanvasAndModel model={model} />
 							</motion.div>
 						),
 				)}
 			</motion.div>
 		</div>
-	)
-}
-
-function CanvasAndModel({ model }: { model: Model }) {
-	return (
-		<Canvas
-			style={{ width: '75%', height: '75%', pointerEvents: 'none' }}
-			camera={{ position: [0, 1.5, 6], fov: 50 }}
-		>
-			<ambientLight intensity={0.4} />
-			<Suspense fallback={null}>
-				<Stage environment="city" intensity={0.8}>
-					<GLTFModel url={model.url ?? ''} />
-				</Stage>
-				<OrbitControls
-					autoRotate
-					autoRotateSpeed={1}
-					enablePan={false}
-					enableZoom={false}
-					enableRotate={false}
-				/>
-			</Suspense>
-		</Canvas>
 	)
 }
 

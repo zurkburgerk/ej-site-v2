@@ -1,13 +1,12 @@
 import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
 import { getPayload, PaginatedDocs } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
 
 import config from '@/payload.config'
 import './styles.css'
 import { Model } from '@/payload-types'
-import ModelCarousel from '@/components/ModelCarousel'
+import ModelCarousel from '@/components/3D/ModelCarousel'
+import { CSSProperties } from 'react'
+import { ExpandingNavButton } from '@/components/buttons/ExpandingNavButton'
 
 export default async function HomePage() {
 	const headers = await getHeaders()
@@ -21,16 +20,32 @@ export default async function HomePage() {
 
 	const models: Model[] = payloadResult.docs
 
+	const navButtonClasses =
+		'aspect-square max-h-25 w-25 bg-orange-500 hover:bg-orange-300 hover:shadow-[8px_8px_12px_rgba(0,0,0,0.2)] transition-all duration-300 flex items-center justify-center'
+
 	return (
-		<div className="home">
-			<div className="content">
-				<div
-					style={{
-						height: '75vh',
-						width: '75vw',
-					}}
-				>
+		<div className="flex flex-col h-screen">
+			<div className="m-8">
+				<h1 className="text-center text-4xl">EMON JOHNSON</h1>
+			</div>
+			<div className="grid grid-cols-12 gap-4 flex-1">
+				<div className="col-span-9">
 					<ModelCarousel models={models} />
+				</div>
+				<div className="col-span-3 flex flex-col">
+					<div className="flex-1 flex items-center justify-center">
+						<ExpandingNavButton label="PROJECTS" href="/projects" />
+					</div>
+					<div className="flex-1 flex items-center justify-center">
+						<div className={navButtonClasses}>
+							<p className="text-xl">ABOUT</p>
+						</div>
+					</div>
+					<div className="flex-1 flex items-center justify-center">
+						<div className={navButtonClasses}>
+							<p className="text-xl">CONTACT</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

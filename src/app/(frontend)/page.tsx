@@ -5,8 +5,8 @@ import config from '@/payload.config'
 import './styles.css'
 import { Model } from '@/payload-types'
 import ModelCarousel from '@/components/3D/ModelCarousel'
-import { CSSProperties } from 'react'
 import { ExpandingNavButton } from '@/components/buttons/ExpandingNavButton'
+import { EntryHeading } from '@/components/heading/EntryHeading'
 
 export default async function HomePage() {
 	const headers = await getHeaders()
@@ -26,7 +26,7 @@ export default async function HomePage() {
 	return (
 		<div className="flex flex-col h-screen">
 			<div className="m-8">
-				<h1 className="text-center text-4xl">EMON JOHNSON</h1>
+				<EntryHeading label="EMON JOHNSON" />
 			</div>
 			<div className="grid grid-cols-12 gap-4 flex-1">
 				<div className="col-span-9">

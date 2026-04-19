@@ -4,8 +4,8 @@ import './styles.css'
 import { TransitionProvider } from '@/components/transition/TransitionProvider'
 
 export const metadata = {
-	description: 'A blank template using Payload in a Next.js app.',
-	title: 'Payload Blank Template',
+	description: 'An architectural portforlio of work by Emon Johnson.',
+	title: 'Portfolio | Emon Johnson',
 }
 
 const nunito = Pathway_Gothic_One({ weight: ['400'], variable: '--font-main' })

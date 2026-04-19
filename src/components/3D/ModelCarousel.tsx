@@ -12,13 +12,14 @@ export type ModelCarouselProps = {
 
 export default function ModelCarousel({ models }: ModelCarouselProps): ReactElement {
 	const [index, setIndex] = useState(0)
+	const [displayIndex, setDisplayIndex] = useState(0)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [slideWidth, setSlideWidth] = useState(0)
 	const maxIndex = models.length - 1
 	const isScrolling = useRef(false)
 	const [direction, setDirection] = useState<'fromRight' | 'fromLeft'>('fromRight')
 	const deltaAccumulator = useRef(0)
-	const SCROLL_THRESHOLD = 50
+	const SCROLL_THRESHOLD = 100
 
 	useEffect(() => {
 		const updateWidth = () => {
@@ -29,42 +30,62 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 		return () => window.removeEventListener('resize', updateWidth)
 	}, [])
 
+	//delay model change
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setDisplayIndex(index)
+		}, 25)
+
+		return () => clearTimeout(timer)
+	}, [index])
+
 	const handleWheel = useCallback(
 		(e: React.WheelEvent) => {
 			e.preventDefault()
-			if (!slideWidth) return
-			if (isScrolling.current) return
+			if (!slideWidth || isScrolling.current) return
 
 			deltaAccumulator.current += e.deltaY
 
 			if (Math.abs(deltaAccumulator.current) < SCROLL_THRESHOLD) return
 
+			isScrolling.current = true
 			const scrollDirection = deltaAccumulator.current > 0 ? 1 : -1
-			setDirection(scrollDirection > 0 ? 'fromRight' : 'fromLeft')
 			deltaAccumulator.current = 0
 
-			isScrolling.current = true
-			setIndex((prev) => Math.min(Math.max(prev + scrollDirection, 0), maxIndex))
-
-			setTimeout(() => {
-				isScrolling.current = false
-			}, 700)
+			setDirection(scrollDirection > 0 ? 'fromRight' : 'fromLeft')
+			setIndex((prev) => {
+				let nextIndex = Math.min(Math.max(prev + scrollDirection, 0), maxIndex)
+				if (nextIndex !== prev) {
+					setTimeout(() => {
+						isScrolling.current = false
+					}, 700)
+				} else {
+					isScrolling.current = false
+				}
+				return nextIndex
+			})
 		},
 		[slideWidth, maxIndex],
 	)
 
-	const currentModel = models[index]
+	const currentModel = models[displayIndex]
 
 	return (
 		<div
 			ref={containerRef}
 			className="ModelCarouselWrapper"
 			onWheel={handleWheel}
-			style={{ overflow: 'hidden', width: '100%', height: '100%', position: 'relative' }}
+			style={{
+				overflow: 'hidden',
+				width: '100%',
+				height: '100%',
+				position: 'relative',
+				scrollBehavior: 'auto',
+			}}
 		>
 			<PreloadModels models={models} />
 
-			<div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+			<div style={{ width: '100%', height: '90%', position: 'absolute', top: 0, left: 0 }}>
 				<Canvas
 					camera={{ position: [0, 0, 5], fov: 50 }}
 					gl={{ antialias: true, powerPreference: 'low-power' }}
@@ -85,6 +106,15 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 						)}
 					</Suspense>
 				</Canvas>
+				<div className="flex flex-row gap-4 items-center justify-center">
+					{models.map((model) =>
+						model === currentModel ? (
+							<div className="aspect-square w-5 h-5 bg-white" />
+						) : (
+							<div className="aspect-square w-5 h-5 bg-gray-500" />
+						),
+					)}
+				</div>
 			</div>
 
 			<motion.div

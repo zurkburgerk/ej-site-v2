@@ -12,7 +12,6 @@ export type ModelCarouselProps = {
 
 export default function ModelCarousel({ models }: ModelCarouselProps): ReactElement {
 	const [index, setIndex] = useState(0)
-	const [displayIndex, setDisplayIndex] = useState(0)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [slideWidth, setSlideWidth] = useState(0)
 	const maxIndex = models.length - 1
@@ -29,15 +28,6 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 		window.addEventListener('resize', updateWidth)
 		return () => window.removeEventListener('resize', updateWidth)
 	}, [])
-
-	//delay model change
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setDisplayIndex(index)
-		}, 25)
-
-		return () => clearTimeout(timer)
-	}, [index])
 
 	const handleWheel = useCallback(
 		(e: React.WheelEvent) => {
@@ -68,12 +58,12 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 		[slideWidth, maxIndex],
 	)
 
-	const currentModel = models[displayIndex]
+	const currentModel = models[index]
 
 	return (
 		<div
 			ref={containerRef}
-			className="ModelCarouselWrapper"
+			className="flex flex-col"
 			onWheel={handleWheel}
 			style={{
 				overflow: 'hidden',
@@ -85,7 +75,7 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 		>
 			<PreloadModels models={models} />
 
-			<div style={{ width: '100%', height: '90%', position: 'absolute', top: 0, left: 0 }}>
+			<div className="flex-1 w-full">
 				<Canvas
 					camera={{ position: [0, 0, 5], fov: 50 }}
 					gl={{ antialias: true, powerPreference: 'low-power' }}
@@ -106,25 +96,10 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 						)}
 					</Suspense>
 				</Canvas>
-				<div className="flex flex-row gap-4 items-center justify-center">
-					{models.map((model) =>
-						model === currentModel ? (
-							<div className="aspect-square w-5 h-5 bg-white" />
-						) : (
-							<div className="aspect-square w-5 h-5 bg-gray-500" />
-						),
-					)}
-				</div>
 			</div>
 
 			<motion.div
-				className="ModelCarousel"
-				style={{
-					display: 'flex',
-					height: '100%',
-					position: 'relative',
-					zIndex: 1,
-				}}
+				className="flex z-10 pt-4 pb-4"
 				animate={{ x: index * -slideWidth }}
 				transition={{ type: 'spring', stiffness: 300, damping: 35 }}
 			>
@@ -133,19 +108,37 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 						model.url && (
 							<motion.div
 								key={model.url}
-								style={{
-									flex: '0 0 100%',
-									height: '100%',
-									padding: '1rem',
-									boxSizing: 'border-box',
-									pointerEvents: 'none',
-								}}
+								className="flex flex-none w-full justify-center text-center"
 							>
-								<h2>{model.title}</h2>
+								<h2 className="text-3xl">{model.title}</h2>
 							</motion.div>
 						),
 				)}
 			</motion.div>
+			<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
+				{models.map((_, i) => {
+					let className =
+						'z-10 aspect-square w-2 h-2 border-1 border-gray-500 transition-all duration-300'
+					if (i === index) {
+						className += ' bg-gray-500 shadow-[4px_4px_6px_rgba(0,0,0,0.3)]'
+					}
+
+					return (
+						<div
+							className={className}
+							onClick={() => {
+								if (i > index) {
+									setDirection('fromRight')
+								} else {
+									setDirection('fromLeft')
+								}
+								setIndex(i)
+							}}
+							key={i}
+						/>
+					)
+				})}
+			</div>
 		</div>
 	)
 }

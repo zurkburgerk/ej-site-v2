@@ -28,22 +28,39 @@ export default async function HomePage() {
 			<div className="m-8">
 				<EntryHeading label="EMON JOHNSON" />
 			</div>
-			<div className="grid grid-cols-12 gap-4 flex-1">
-				<div className="col-span-9">
+			<div className="grid grid-cols-12 gap-4 flex-1 overflow-hidden">
+				<div className="col-span-12 sm:col-span-9 overflow-hidden">
 					<ModelCarousel models={models} />
 				</div>
-				<div className="col-span-3 flex flex-col">
-					<div className="flex-1 flex items-center justify-center">
+				<div className="col-span-12 sm:col-span-3 flex flex-col sm:flex-col h-full">
+					<div className="hidden sm:flex flex-1 items-center justify-center">
 						<ExpandingNavButton label="PROJECTS" href="/projects" />
 					</div>
-					<div className="flex-1 flex items-center justify-center">
+					<div className="hidden sm:flex flex-1 items-center justify-center">
 						<div className={navButtonClasses}>
 							<p className="text-xl">ABOUT</p>
 						</div>
 					</div>
-					<div className="flex-1 flex items-center justify-center">
+					<div className="hidden sm:flex flex-1 items-center justify-center">
 						<div className={navButtonClasses}>
 							<p className="text-xl">CONTACT</p>
+						</div>
+					</div>
+
+					{/* mobile buttons */}
+					<div className="sm:hidden flex flex-row gap-4 p-4">
+						<div className="flex-1 flex items-center justify-center">
+							<ExpandingNavButton label="PROJECTS" href="/projects" />
+						</div>
+						<div className="flex-1 flex items-center justify-center">
+							<div className={navButtonClasses}>
+								<p className="text-xl">ABOUT</p>
+							</div>
+						</div>
+						<div className="flex-1 flex items-center justify-center">
+							<div className={navButtonClasses}>
+								<p className="text-xl">CONTACT</p>
+							</div>
 						</div>
 					</div>
 				</div>

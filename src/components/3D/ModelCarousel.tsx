@@ -77,7 +77,7 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 
 			<div className="flex-1 w-full">
 				<Canvas
-					camera={{ position: [0, 0, 5], fov: 50 }}
+					camera={{ position: [0, 2, 5], rotateX: -45, fov: 50 }}
 					gl={{ antialias: true, powerPreference: 'low-power' }}
 					dpr={[1, 1.5]}
 				>

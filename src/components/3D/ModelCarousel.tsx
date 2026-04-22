@@ -118,9 +118,9 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 			<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
 				{models.map((_, i) => {
 					let className =
-						'z-10 aspect-square w-2 h-2 border-1 border-gray-500 transition-all duration-300'
+						'z-10 aspect-square w-2 h-2 border-1 border-black transition-all duration-300 hover:shadow-[2px_2px__rgba(0,0,0,0.3)]'
 					if (i === index) {
-						className += ' bg-gray-500 shadow-[4px_4px_6px_rgba(0,0,0,0.3)]'
+						className += ' bg-black shadow-[2px_2px__rgba(0,0,0,0.3)]'
 					}
 
 					return (

@@ -25,10 +25,9 @@ export default async function HomePage() {
 
 	return (
 		<div className="flex flex-col h-screen">
-			<div className="m-8">
-				<EntryHeading label="EMON JOHNSON" />
-			</div>
-			<div className="grid grid-cols-12 gap-4 flex-1 overflow-hidden">
+			<EntryHeading label="EMON JOHNSON" />
+
+			<div className="grid grid-cols-12 flex-1 overflow-hidden">
 				<div className="col-span-12 sm:col-span-9 overflow-hidden">
 					<ModelCarousel models={models} />
 				</div>
@@ -37,14 +36,10 @@ export default async function HomePage() {
 						<ExpandingNavButton label="PROJECTS" href="/projects" />
 					</div>
 					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<div className={navButtonClasses}>
-							<p className="text-xl">ABOUT</p>
-						</div>
+						<ExpandingNavButton label="ABOUT" href="/projects" />
 					</div>
 					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<div className={navButtonClasses}>
-							<p className="text-xl">CONTACT</p>
-						</div>
+						<ExpandingNavButton label="CONTACT" href="/projects" />
 					</div>
 
 					{/* mobile buttons */}
@@ -53,14 +48,10 @@ export default async function HomePage() {
 							<ExpandingNavButton label="PROJECTS" href="/projects" />
 						</div>
 						<div className="flex-1 flex items-center justify-center">
-							<div className={navButtonClasses}>
-								<p className="text-xl">ABOUT</p>
-							</div>
+							<ExpandingNavButton label="ABOUT" href="/projects" />
 						</div>
 						<div className="flex-1 flex items-center justify-center">
-							<div className={navButtonClasses}>
-								<p className="text-xl">CONTACT</p>
-							</div>
+							<ExpandingNavButton label="CONTACT" href="/projects" />
 						</div>
 					</div>
 				</div>

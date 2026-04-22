@@ -45,9 +45,21 @@ export function EntryHeading({ label }: { label: string }) {
 
 	return (
 		<>
-			<h1 ref={h1Ref} className="text-center text-4xl" style={{ opacity: done ? 1 : 0 }}>
-				{label}
-			</h1>
+			<div className="grid grid-cols-12 pt-8 pb-8">
+				<div className="col-span-6 sm:col-span-9" />
+				<div className="col-span-6 sm:col-span-3">
+					<h1
+						ref={h1Ref}
+						className="text-4xl text-center"
+						style={{
+							opacity: done ? 1 : 0,
+						}}
+					>
+						{label}
+					</h1>
+				</div>
+			</div>
+			<div className="ml-auto mr-0 h-1 w-2/3 bg-black" />
 
 			{!done && (
 				<div

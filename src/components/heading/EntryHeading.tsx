@@ -1,93 +1,58 @@
 'use client'
-import { animate } from 'motion/react'
-import { useState, useRef, useLayoutEffect } from 'react'
+import { motion } from 'motion/react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 
 export function EntryHeading({ label }: { label: string }) {
-	const [done, setDone] = useState(false)
-	const h1Ref = useRef<HTMLHeadingElement>(null)
-	const textRef = useRef<HTMLHeadingElement>(null)
-	const overlayRef = useRef<HTMLDivElement>(null)
+	const [hasAnimated, setHasAnimated] = useState(true) // server + client agree: no animation
+	const [width, setWidth] = useState(0)
 
 	useLayoutEffect(() => {
-		if (!h1Ref.current || !textRef.current || !overlayRef.current) return
-
-		const rect = h1Ref.current.getBoundingClientRect()
-		const fontSize = window.getComputedStyle(h1Ref.current).fontSize
-		const targetTop = rect.top + rect.height / 2
-
-		const sequence = async () => {
-			await new Promise((res) => setTimeout(res, 100))
-
-			// move text to final position
-			await animate(
-				textRef.current!,
-				{
-					top: targetTop,
-					fontSize: fontSize,
-				},
-				{ duration: 0.8, ease: [0.76, 0, 0.24, 1] },
-			)
-
-			// fade out overlay
-			await animate(
-				overlayRef.current!,
-				{
-					backgroundColor: 'rgba(0,0,0,0)',
-				},
-				{ duration: 0.6, ease: 'easeInOut' },
-			)
-
-			setDone(true)
+		setWidth(window.innerWidth)
+		const animated = sessionStorage.getItem('entryHeadingAnimated')
+		sessionStorage.setItem('entryHeadingAnimated', 'true')
+		if (!animated) {
+			setHasAnimated(false) // first visit only: triggers animation before paint
 		}
-
-		sequence()
 	}, [])
 
 	return (
 		<>
 			<div className="grid grid-cols-12 pt-8 pb-8">
 				<div className="col-span-6 sm:col-span-9" />
-				<div className="col-span-6 sm:col-span-3">
-					<h1
-						ref={h1Ref}
-						className="text-4xl text-center"
-						style={{
-							opacity: done ? 1 : 0,
-						}}
-					>
-						{label}
-					</h1>
+				<div className="col-span-6 sm:col-span-3" style={{ zIndex: 1001, position: 'relative' }}>
+					<a href="/">
+						<motion.h1
+							className="text-4xl text-center"
+							style={{ zIndex: 1001, position: 'relative' }}
+							animate={{
+								translateX: hasAnimated ? 0 : [-width, 0, 0],
+								color: hasAnimated ? '#000' : ['#fff', '#fff', '#000'],
+							}}
+							transition={
+								hasAnimated
+									? { duration: 0 }
+									: { duration: 4, times: [0, 0.25, 0.5, 1], ease: 'circOut' }
+							}
+						>
+							{label}
+						</motion.h1>
+					</a>
 				</div>
 			</div>
 			<div className="ml-auto mr-0 h-1 w-2/3 bg-black" />
 
-			{!done && (
-				<div
-					ref={overlayRef}
+			{!hasAnimated && (
+				<motion.div
 					style={{
 						position: 'fixed',
 						inset: 0,
-						zIndex: 9999,
+						zIndex: 999,
 						pointerEvents: 'none',
 						backgroundColor: 'rgba(0,0,0,1)',
 					}}
-				>
-					<h1
-						ref={textRef}
-						style={{
-							position: 'fixed',
-							top: '50%',
-							left: '50%',
-							transform: 'translate(-50%, -50%)',
-							fontSize: '6rem',
-							color: 'white',
-							margin: 0,
-							whiteSpace: 'nowrap',
-						}}
-					>
-						{label}
-					</h1>
-				</div>
+					animate={{ opacity: 0 }}
+					transition={{ delay: 2, duration: 2, type: 'spring' }}
+				/>
 			)}
 		</>
 	)

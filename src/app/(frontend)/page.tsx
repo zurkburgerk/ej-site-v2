@@ -3,7 +3,7 @@ import { getPayload, PaginatedDocs } from 'payload'
 
 import config from '@/payload.config'
 import './styles.css'
-import { Model } from '@/payload-types'
+import { Model, Project, ModelsSelect } from '@/payload-types'
 import ModelCarousel from '@/components/Model/ModelCarousel'
 import { ExpandingNavButton } from '@/components/buttons/ExpandingNavButton'
 import { EntryHeading } from '@/components/heading/EntryHeading'
@@ -14,14 +14,12 @@ export default async function HomePage() {
 	const payload = await getPayload({ config: payloadConfig })
 	const { user } = await payload.auth({ headers })
 
-	const payloadResult: PaginatedDocs<Model> = await payload.find({
-		collection: 'models',
+	const payloadResult: PaginatedDocs<Project> = await payload.find({
+		collection: 'projects',
+		depth: 1,
 	})
 
-	const models: Model[] = payloadResult.docs
-
-	const navButtonClasses =
-		'aspect-square max-h-25 w-25 bg-orange-500 hover:bg-orange-300 hover:shadow-[8px_8px_12px_rgba(0,0,0,0.2)] transition-all duration-300 flex items-center justify-center'
+	const projects = payloadResult.docs
 
 	return (
 		<div className="flex flex-col h-screen">
@@ -29,7 +27,7 @@ export default async function HomePage() {
 
 			<div className="grid grid-cols-12 flex-1 overflow-hidden">
 				<div className="col-span-12 sm:col-span-9 overflow-hidden">
-					<ModelCarousel models={models} />
+					<ModelCarousel projects={projects} />
 				</div>
 				<div className="col-span-12 sm:col-span-3 flex flex-col sm:flex-col h-full">
 					<div className="hidden sm:flex flex-1 items-center justify-center">

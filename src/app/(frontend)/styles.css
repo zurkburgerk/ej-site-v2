@@ -22,3 +22,14 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-main);
   font-weight: bold;
 }
+
+@layer components {
+  ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+}

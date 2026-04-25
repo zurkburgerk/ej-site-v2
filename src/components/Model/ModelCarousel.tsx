@@ -1,6 +1,6 @@
 'use client'
 import { ReactElement, Suspense, useEffect, useRef, useState, useCallback } from 'react'
-import { Model } from '@/payload-types'
+import { Model, Project } from '@/payload-types'
 import { motion } from 'motion/react'
 import { Canvas } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
@@ -8,14 +8,14 @@ import AnimatedModel from './AnimatedModel'
 import ModelCanvas from './ModelCanvas'
 
 export type ModelCarouselProps = {
-	models: Model[]
+	projects: Project[]
 }
 
-export default function ModelCarousel({ models }: ModelCarouselProps): ReactElement {
+export default function ModelCarousel({ projects }: ModelCarouselProps): ReactElement {
 	const [index, setIndex] = useState(0)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [slideWidth, setSlideWidth] = useState(0)
-	const maxIndex = models.length - 1
+	const maxIndex = projects.length - 1
 	const isScrolling = useRef(false)
 	const [direction, setDirection] = useState<'fromRight' | 'fromLeft'>('fromRight')
 	const deltaAccumulator = useRef(0)
@@ -58,8 +58,13 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 		},
 		[slideWidth, maxIndex],
 	)
+	const allModels: Model[] = projects
+		.map((project) => project.model)
+		.filter((model): model is Model => typeof model !== 'number')
 
-	const currentModel = models[index]
+	const currentProject = projects[index]
+	const currentProjectModel: Model | null =
+		typeof currentProject.model !== 'number' ? currentProject.model : null
 
 	return (
 		<div
@@ -74,16 +79,18 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 				scrollBehavior: 'auto',
 			}}
 		>
-			<PreloadModels models={models} />
+			<PreloadModels models={allModels} />
 
 			<div className="flex-1 w-full">
-				<ModelCanvas
-					url={currentModel.url ? currentModel.url : ''}
-					fadeIn
-					autoRotate
-					mouseTrackX
-					transition={direction}
-				/>
+				<a href={'/projects/' + currentProject.slug}>
+					<ModelCanvas
+						url={currentProjectModel && currentProjectModel.url ? currentProjectModel.url : ''}
+						fadeIn
+						autoRotate
+						mouseTrackX
+						transition={direction}
+					/>
+				</a>
 			</div>
 
 			<motion.div
@@ -91,20 +98,14 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 				animate={{ x: index * -slideWidth }}
 				transition={{ type: 'spring', stiffness: 300, damping: 35 }}
 			>
-				{models.map(
-					(model) =>
-						model.url && (
-							<motion.div
-								key={model.url}
-								className="flex flex-none w-full justify-center text-center"
-							>
-								<h2 className="text-3xl">{model.title}</h2>
-							</motion.div>
-						),
-				)}
+				{projects.map((project) => (
+					<motion.div key={project.id} className="flex flex-none w-full justify-center text-center">
+						<h2 className="text-3xl">{project.title}</h2>
+					</motion.div>
+				))}
 			</motion.div>
 			<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
-				{models.map((_, i) => {
+				{projects.map((_, i) => {
 					let className =
 						'z-10 aspect-square w-2 h-2 border-1 border-black transition-all duration-300 hover:shadow-[2px_2px__rgba(0,0,0,0.3)]'
 					if (i === index) {

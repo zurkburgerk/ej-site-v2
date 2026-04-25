@@ -3,7 +3,7 @@ import { getPayload, PaginatedDocs } from 'payload'
 
 import config from '@/payload.config'
 import { Model } from '@/payload-types'
-import ModelCarousel from '@/components/3D/ModelCarousel'
+import ModelCarousel from '@/components/Model/ModelCarousel'
 import { CSSProperties } from 'react'
 
 export default async function HomePage() {

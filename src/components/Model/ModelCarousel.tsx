@@ -5,6 +5,7 @@ import { motion } from 'motion/react'
 import { Canvas } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import AnimatedModel from './AnimatedModel'
+import ModelCanvas from './ModelCanvas'
 
 export type ModelCarouselProps = {
 	models: Model[]
@@ -76,26 +77,13 @@ export default function ModelCarousel({ models }: ModelCarouselProps): ReactElem
 			<PreloadModels models={models} />
 
 			<div className="flex-1 w-full">
-				<Canvas
-					camera={{ position: [0, 2, 5], rotateX: -45, fov: 50 }}
-					gl={{ antialias: true, powerPreference: 'low-power' }}
-					dpr={[1, 1.5]}
-				>
-					<ambientLight intensity={3} />
-					<directionalLight position={[5, 10, 5]} intensity={4} castShadow={false} />
-					<directionalLight position={[-5, 5, -5]} intensity={2} />
-					<Suspense fallback={null}>
-						{currentModel?.url && (
-							<AnimatedModel
-								url={currentModel.url}
-								fadeIn
-								autoRotate
-								mouseTrackX
-								transition={direction}
-							/>
-						)}
-					</Suspense>
-				</Canvas>
+				<ModelCanvas
+					url={currentModel.url ? currentModel.url : ''}
+					fadeIn
+					autoRotate
+					mouseTrackX
+					transition={direction}
+				/>
 			</div>
 
 			<motion.div

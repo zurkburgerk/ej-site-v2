@@ -4,7 +4,7 @@ import { getPayload, PaginatedDocs } from 'payload'
 import config from '@/payload.config'
 import './styles.css'
 import { Model } from '@/payload-types'
-import ModelCarousel from '@/components/3D/ModelCarousel'
+import ModelCarousel from '@/components/Model/ModelCarousel'
 import { ExpandingNavButton } from '@/components/buttons/ExpandingNavButton'
 import { EntryHeading } from '@/components/heading/EntryHeading'
 

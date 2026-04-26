@@ -2,9 +2,7 @@
 import { ReactElement, Suspense, useEffect, useRef, useState, useCallback } from 'react'
 import { Model, Project } from '@/payload-types'
 import { motion } from 'motion/react'
-import { Canvas } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
-import AnimatedModel from './AnimatedModel'
 import ModelCanvas from './ModelCanvas'
 import Link from 'next/link'
 
@@ -65,7 +63,7 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 
 	const currentProject = projects[index]
 	const currentProjectModel: Model | null =
-		typeof currentProject.model !== 'number' ? currentProject.model : null
+		currentProject && typeof currentProject.model !== 'number' ? currentProject.model : null
 
 	return (
 		<div

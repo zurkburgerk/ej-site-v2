@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pathway_Gothic_One } from 'next/font/google'
+import { Hanken_Grotesk } from 'next/font/google'
 import './styles.css'
 import { TransitionProvider } from '@/components/transition/TransitionProvider'
 
@@ -8,7 +8,7 @@ export const metadata = {
 	title: 'Portfolio | Emon Johnson',
 }
 
-const nunito = Pathway_Gothic_One({ weight: ['400'], variable: '--font-main' })
+const nunito = Hanken_Grotesk({ weight: ['400'], variable: '--font-main' })
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
 	const { children } = props

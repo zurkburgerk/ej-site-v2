@@ -1,5 +1,6 @@
 'use client'
 import { motion } from 'motion/react'
+import Link from 'next/link'
 import { useEffect, useLayoutEffect, useState } from 'react'
 
 export function EntryHeading({ label }: { label: string }) {
@@ -20,7 +21,7 @@ export function EntryHeading({ label }: { label: string }) {
 			<div className="grid grid-cols-12 pt-8 pb-8">
 				<div className="col-span-6 sm:col-span-9" />
 				<div className="col-span-6 sm:col-span-3" style={{ zIndex: 1001, position: 'relative' }}>
-					<a href="/">
+					<Link href="/">
 						<motion.h1
 							className="text-4xl text-center"
 							style={{ zIndex: 1001, position: 'relative' }}
@@ -36,10 +37,10 @@ export function EntryHeading({ label }: { label: string }) {
 						>
 							{label}
 						</motion.h1>
-					</a>
+					</Link>
 				</div>
 			</div>
-			<div className="ml-auto mr-0 h-1 w-2/3 bg-black" />
+			<div className="ml-auto mr-0 h-[2px] w-2/3 bg-black" />
 
 			{!hasAnimated && (
 				<motion.div

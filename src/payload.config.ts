@@ -4,6 +4,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import fs from 'fs'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -14,6 +15,21 @@ import { Pages } from './collections/Pages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Extract and create database directory
+const databaseUrl = process.env.DATABASE_URL
+
+if (!databaseUrl) {
+	throw new Error('DATABASE_URL environment variable is not set')
+}
+
+const dbFilePath = databaseUrl.replace('file:', '')
+const resolvedDbPath = path.isAbsolute(dbFilePath) ? dbFilePath : path.resolve(dirname, dbFilePath)
+const dbDir = path.dirname(resolvedDbPath)
+
+if (!fs.existsSync(dbDir)) {
+	fs.mkdirSync(dbDir, { recursive: true })
+}
 
 export default buildConfig({
 	admin: {
@@ -37,7 +53,7 @@ export default buildConfig({
 	},
 	db: sqliteAdapter({
 		client: {
-			url: process.env.DATABASE_URL || '',
+			url: databaseUrl,
 		},
 	}),
 	sharp,

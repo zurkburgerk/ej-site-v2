@@ -6,6 +6,7 @@ import { Canvas } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import AnimatedModel from './AnimatedModel'
 import ModelCanvas from './ModelCanvas'
+import Link from 'next/link'
 
 export type ModelCarouselProps = {
 	projects: Project[]
@@ -82,7 +83,7 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 			<PreloadModels models={allModels} />
 
 			<div className="flex-1 w-full">
-				<a href={'/projects/' + currentProject.slug}>
+				<Link href={'/projects/' + currentProject.slug}>
 					<ModelCanvas
 						url={currentProjectModel && currentProjectModel.url ? currentProjectModel.url : ''}
 						fadeIn
@@ -90,7 +91,7 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 						mouseTrackX
 						transition={direction}
 					/>
-				</a>
+				</Link>
 			</div>
 
 			<motion.div

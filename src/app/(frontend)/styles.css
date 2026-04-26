@@ -23,6 +23,49 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
+@layer base {
+  p {
+    font-size: 1.1rem; /* text-xl equivalent */
+    line-height: 1.75rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 2.25rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+
+  h5 {
+    font-size: 1.25rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+
+  h6 {
+    font-size: 1.125rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+}
+
 @layer components {
   ul {
     list-style-type: disc;

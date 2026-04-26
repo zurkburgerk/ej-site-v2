@@ -26,6 +26,7 @@ export default function ModelCanvas({
 			camera={{ position: [0, 2, 5], rotateX: -45, fov: 50 }}
 			gl={{ antialias: true, powerPreference: 'low-power' }}
 			dpr={[1, 1.5]}
+			key={url}
 		>
 			<ambientLight intensity={3} />
 			<directionalLight position={[5, 10, 5]} intensity={4} castShadow={false} />

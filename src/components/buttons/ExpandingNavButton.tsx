@@ -18,7 +18,7 @@ export function ExpandingNavButton({ label, href }: { label: string; href: strin
 			onClick={handleClick}
 			className="aspect-square max-h-25 w-25 border-solid border-2 border-black hover:border-orange-500 hover:shadow-[8px_8px_rgba(0,0,0,0.2)] transition-all duration-300 flex items-center justify-center"
 		>
-			<p className="text-xl">{label}</p>
+			<p className="text-m">{label}</p>
 		</div>
 	)
 }

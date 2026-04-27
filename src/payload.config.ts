@@ -17,21 +17,6 @@ import { SplitBlock } from './blocks/SplitBlock/config'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Extract and create database directory
-const databaseUrl = process.env.DATABASE_URL
-
-if (!databaseUrl) {
-	throw new Error('DATABASE_URL environment variable is not set')
-}
-
-const dbFilePath = databaseUrl.replace('file:', '')
-const resolvedDbPath = path.isAbsolute(dbFilePath) ? dbFilePath : path.resolve(dirname, dbFilePath)
-const dbDir = path.dirname(resolvedDbPath)
-
-if (!fs.existsSync(dbDir)) {
-	fs.mkdirSync(dbDir, { recursive: true })
-}
-
 export default buildConfig({
 	admin: {
 		user: Users.slug,
@@ -54,7 +39,7 @@ export default buildConfig({
 	},
 	db: sqliteAdapter({
 		client: {
-			url: databaseUrl,
+			url: process.env.DATABASE_URL || '',
 		},
 	}),
 	sharp,

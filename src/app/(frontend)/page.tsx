@@ -34,10 +34,10 @@ export default async function HomePage() {
 						<ExpandingNavButton label="PROJECTS" href="/projects" />
 					</div>
 					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<ExpandingNavButton label="ABOUT" href="/projects" />
+						<ExpandingNavButton label="ABOUT" href="/about" />
 					</div>
 					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<ExpandingNavButton label="CONTACT" href="/projects" />
+						<ExpandingNavButton label="CONTACT" href="/contact" />
 					</div>
 
 					{/* mobile buttons */}
@@ -46,10 +46,10 @@ export default async function HomePage() {
 							<ExpandingNavButton label="PROJECTS" href="/projects" />
 						</div>
 						<div className="flex-1 flex items-center justify-center">
-							<ExpandingNavButton label="ABOUT" href="/projects" />
+							<ExpandingNavButton label="ABOUT" href="/about" />
 						</div>
 						<div className="flex-1 flex items-center justify-center">
-							<ExpandingNavButton label="CONTACT" href="/projects" />
+							<ExpandingNavButton label="CONTACT" href="/contact" />
 						</div>
 					</div>
 				</div>

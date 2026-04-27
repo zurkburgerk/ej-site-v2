@@ -5,6 +5,7 @@ import {
 import { ModelBlockComponent } from '@/blocks/ModelBlock/Component'
 import { SerializedBlockNode } from '@payloadcms/richtext-lexical'
 import { Model } from '@/payload-types'
+import { SplitBlockComponent } from '@/blocks/SplitBlock/Component'
 
 type ModelBlock = {
 	model: Model
@@ -15,6 +16,12 @@ type ModelBlock = {
 	mouseTrackX?: boolean
 	mouseTrackY?: boolean
 	blockType: 'modelBlock'
+	id?: string
+}
+
+type SplitBlock = {
+	left: any
+	right: any
 	id?: string
 }
 
@@ -33,6 +40,9 @@ const jsxConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
 				mouseTrackX={node.fields.mouseTrackX}
 				mouseTrackY={node.fields.mouseTrackY}
 			/>
+		),
+		splitBlock: ({ node }: { node: SerializedBlockNode<SplitBlock> }) => (
+			<SplitBlockComponent left={node.fields.left} right={node.fields.right} />
 		),
 	},
 })

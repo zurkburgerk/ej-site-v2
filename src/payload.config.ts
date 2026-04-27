@@ -12,6 +12,7 @@ import { Models } from './collections/Models'
 import { Projects } from './collections/Projects'
 import { ModelBlock } from './blocks/ModelBlock/config'
 import { Pages } from './collections/Pages'
+import { SplitBlock } from './blocks/SplitBlock/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -43,7 +44,7 @@ export default buildConfig({
 		features: ({ defaultFeatures }) => [
 			...defaultFeatures,
 			BlocksFeature({
-				blocks: [ModelBlock],
+				blocks: [ModelBlock, SplitBlock],
 			}),
 		],
 	}),

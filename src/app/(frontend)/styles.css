@@ -5,13 +5,6 @@
   --foreground: black;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000;
-    --foreground: white;
-  }
-}
-
 body {
   font-family: var(--font-main);
   background-color: var(--background);

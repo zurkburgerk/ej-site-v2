@@ -21,7 +21,7 @@ export const afterChange: CollectionAfterChangeHook = async ({ doc, operation, r
 	const filename = doc.filename
 	if (!filename) return doc
 
-	const uploadDir = path.resolve(process.cwd(), 'public/models')
+	const uploadDir = path.resolve(process.cwd(), 'media/models')
 	const filePath = path.join(uploadDir, filename)
 	const isGLTF = filename.endsWith('.gltf')
 

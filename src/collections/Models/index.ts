@@ -27,6 +27,6 @@ export const Models: CollectionConfig = {
 		},
 	],
 	upload: {
-		staticDir: 'public/models',
+		staticDir: 'media/models',
 	},
 }

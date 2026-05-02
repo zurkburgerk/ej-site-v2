@@ -26,32 +26,8 @@ export default async function HomePage() {
 			<EntryHeading label="EMON JOHNSON" />
 
 			<div className="grid grid-cols-12 flex-1 overflow-hidden">
-				<div className="col-span-12 sm:col-span-9 overflow-hidden">
+				<div className="col-span-12 sm:col-span-12 overflow-hidden">
 					<ModelCarousel projects={projects} />
-				</div>
-				<div className="col-span-12 sm:col-span-3 flex flex-col sm:flex-col h-full">
-					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<ExpandingNavButton label="PROJECTS" href="/projects" />
-					</div>
-					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<ExpandingNavButton label="ABOUT" href="/about" />
-					</div>
-					<div className="hidden sm:flex flex-1 items-center justify-center">
-						<ExpandingNavButton label="CONTACT" href="/contact" />
-					</div>
-
-					{/* mobile buttons */}
-					<div className="sm:hidden flex flex-row gap-4 p-4">
-						<div className="flex-1 flex items-center justify-center">
-							<ExpandingNavButton label="PROJECTS" href="/projects" />
-						</div>
-						<div className="flex-1 flex items-center justify-center">
-							<ExpandingNavButton label="ABOUT" href="/about" />
-						</div>
-						<div className="flex-1 flex items-center justify-center">
-							<ExpandingNavButton label="CONTACT" href="/contact" />
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

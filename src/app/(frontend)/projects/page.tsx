@@ -5,30 +5,23 @@ import { RichText } from '@/components/RichText'
 import { Model } from '@/payload-types'
 import { StaticHeading } from '@/components/heading/StaticHeading'
 
-export default async function Page({ params }: { params: Promise<{ projectslug: string }> }) {
-	const { projectslug } = await params
+export default async function Page() {
 	const payload = await getPayload({ config })
 
 	const { docs } = await payload.find({
 		collection: 'projects',
-		where: {
-			slug: { equals: projectslug },
-		},
 		depth: 2, // populates the model relationship inside the block
-		limit: 1,
 	})
 
-	const page = docs[0]
+	const projects = docs[0]
 
-	if (!page) notFound()
-
-	const model: Model | undefined = typeof page.model !== 'number' ? page.model : undefined
+	if (!projects) notFound()
 
 	return (
 		<main>
 			<StaticHeading label="EMON JOHNSON" />
-			<div className="relative m-10 mt-30 z-20 text-xl">
-				<RichText data={page.content} />
+			<div className="relative m-10 z-20 text-xl">
+				<h2>Projects</h2>
 			</div>
 		</main>
 	)

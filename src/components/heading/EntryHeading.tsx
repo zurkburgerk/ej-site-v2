@@ -1,8 +1,10 @@
 'use client'
-import { motion } from 'motion/react'
+import { motion, stagger } from 'motion/react'
 import Link from 'next/link'
 import { useLayoutEffect, useState } from 'react'
 import { ExpandingNavButton } from '../buttons/ExpandingNavButton'
+import { HeadingMenu } from './HeadingMenu'
+import { StaticHeading } from './StaticHeading'
 
 const DURATION = 3
 const TIMES = [0, 0.75, 1]
@@ -12,6 +14,7 @@ export function EntryHeading({ label }: { label: string }) {
 	const [isFirstVisit, setIsFirstVisit] = useState(false)
 	const [clicked, setClicked] = useState(false)
 	const [width, setWidth] = useState(0)
+	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	useLayoutEffect(() => {
 		const w = window.innerWidth
@@ -22,36 +25,20 @@ export function EntryHeading({ label }: { label: string }) {
 		setReady(true)
 	}, [])
 
-	const nav = (
-		<div className="col-span-4 flex flex-row gap-4 pl-2">
-			<ExpandingNavButton label="PROJECTS" href="/projects" />
-			<ExpandingNavButton label="ABOUT" href="/about" />
-			<ExpandingNavButton label="CONTACT" href="/contact" />
-		</div>
-	)
-
 	if (!ready) {
-		return (
-			<>
-				<div className="grid grid-cols-12 py-2">
-					{nav}
-					<div className="relative col-span-8 z-1001">
-						<div className="relative text-xl w-fit ml-auto mr-2 opacity-0">
-							<Link href="/">
-								<h1>{label}</h1>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="ml-auto mr-0 h-[1px] w-2/3 bg-black" />
-			</>
-		)
+		return <StaticHeading label="EMON JOHNSON" />
 	}
 
 	return (
 		<>
-			<div className="grid grid-cols-12 py-2">
-				{nav}
+			<nav className="grid grid-cols-12 py-2">
+				<div className="col-span-4">
+					<HeadingMenu>
+						<ExpandingNavButton label="PROJECTS" href="/projects" />
+						<ExpandingNavButton label="ABOUT" href="/about" />
+						<ExpandingNavButton label="CONTACT" href="/contact" />
+					</HeadingMenu>
+				</div>
 				<div className="relative col-span-8 z-1001">
 					<motion.div
 						className="relative text-xl z-1001 w-fit ml-auto mr-2"
@@ -74,7 +61,7 @@ export function EntryHeading({ label }: { label: string }) {
 						</Link>
 					</motion.div>
 				</div>
-			</div>
+			</nav>
 
 			<div className="ml-auto mr-0 h-[1px] w-2/3 bg-black" />
 

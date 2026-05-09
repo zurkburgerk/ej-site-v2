@@ -41,6 +41,11 @@ export const Projects: CollectionConfig = {
 			},
 		},
 		{
+			name: 'year',
+			type: 'number',
+			required: true,
+		},
+		{
 			name: 'model',
 			type: 'relationship',
 			relationTo: 'models',

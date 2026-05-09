@@ -179,6 +179,7 @@ export interface Project {
   id: number;
   title: string;
   slug: string;
+  year: number;
   model: number | Model;
   content?: {
     root: {
@@ -391,6 +392,7 @@ export interface ModelsSelect<T extends boolean = true> {
 export interface ProjectsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  year?: T;
   model?: T;
   content?: T;
   meta?:

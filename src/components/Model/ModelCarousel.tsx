@@ -92,21 +92,6 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 						/>
 					</Link>
 				</div>
-
-				<motion.div
-					className="flex z-10 pt-4 pb-4"
-					animate={{ x: index * -slideWidth }}
-					transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-				>
-					{projects.map((project) => (
-						<motion.div
-							key={project.id}
-							className="flex flex-none w-full justify-center text-center"
-						>
-							<h2 className="text-3xl">{project.title}</h2>
-						</motion.div>
-					))}
-				</motion.div>
 				<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
 					{projects.map((_, i) => {
 						let className =

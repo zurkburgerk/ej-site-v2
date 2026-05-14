@@ -4,6 +4,8 @@ import { StaticHeading } from '@/components/heading/StaticHeading'
 import Link from 'next/link'
 import ModelCanvas from '@/components/Model/ModelCanvas'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
 	const payload = await getPayload({ config })
 	const { docs } = await payload.find({

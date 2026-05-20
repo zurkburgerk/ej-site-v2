@@ -19,7 +19,18 @@ export const afterChange: CollectionAfterChangeHook = async ({ doc, operation, r
 	if (operation !== 'create') return doc
 
 	const filename = doc.filename
-	if (!filename) return doc
+	if (!filename) {
+		console.error('[gltf-optimize] Document has no file name, skipping optimize')
+		return doc
+	}
+	if (!doc.id) {
+		console.error('[gltf-optimize] Document has no ID, skipping optimize')
+		return doc
+	}
+	if (!doc.title) {
+		console.error('[gltf-optimize] Document has no Title, skipping optimize')
+		return doc
+	}
 
 	const uploadDir = path.resolve(process.cwd(), 'media/models')
 	const filePath = path.join(uploadDir, filename)

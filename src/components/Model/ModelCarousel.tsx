@@ -67,54 +67,83 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 
 	if (currentProject) {
 		return (
-			<div
-				ref={containerRef}
-				className="flex flex-col"
-				onWheel={handleWheel}
-				style={{
-					overflow: 'hidden',
-					width: '100%',
-					height: '100%',
-					position: 'relative',
-					scrollBehavior: 'auto',
-				}}
-			>
-				<PreloadModels models={allModels} />
-
-				<div className="flex-1 w-full">
-					<Link href={'/projects/' + currentProject.slug}>
-						<ModelCanvas
-							url={currentProjectModel && currentProjectModel.url ? currentProjectModel.url : ''}
-							fadeIn
-							autoRotate
-							mouseTrackX
-							transition={direction}
-						/>
-					</Link>
-				</div>
-				<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
-					{projects.map((_, i) => {
-						let className =
-							'z-10 aspect-square w-2 h-2 border-1 border-black transition-all duration-300 hover:shadow-[2px_2px__rgba(0,0,0,0.3)]'
-						if (i === index) {
-							className += ' bg-black shadow-[2px_2px__rgba(0,0,0,0.3)]'
-						}
-
-						return (
-							<div
-								className={className}
-								onClick={() => {
-									if (i > index) {
-										setDirection('fromRight')
-									} else {
-										setDirection('fromLeft')
+			<div className="grid grid-cols-12 h-full">
+				<div className="col-span-4 h-full flex flex-col justify-center items-center">
+					<motion.div
+						key={index}
+						initial={
+							direction === 'fromRight'
+								? {
+										opacity: 0,
+										x: 100,
 									}
-									setIndex(i)
-								}}
-								key={i}
+								: {
+										opacity: 0,
+										x: -100,
+									}
+						}
+						animate={{
+							opacity: 100,
+							x: 0,
+						}}
+						transition={{
+							duration: 0.5,
+							ease: 'easeOut',
+						}}
+					>
+						<h2 className="text-4xl">{currentProject.title}</h2>
+						<p>{currentProject.year}</p>
+					</motion.div>
+				</div>
+				<div
+					ref={containerRef}
+					className="col-span-8 flex flex-col"
+					onWheel={handleWheel}
+					style={{
+						overflow: 'hidden',
+						width: '100%',
+						height: '100%',
+						position: 'relative',
+						scrollBehavior: 'auto',
+					}}
+				>
+					<PreloadModels models={allModels} />
+
+					<div className="flex-1 w-full">
+						<Link href={'/projects/' + currentProject.slug}>
+							<ModelCanvas
+								url={currentProjectModel && currentProjectModel.url ? currentProjectModel.url : ''}
+								fadeIn
+								autoRotate
+								mouseTrackX
+								transition={direction}
 							/>
-						)
-					})}
+						</Link>
+					</div>
+					<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
+						{projects.map((_, i) => {
+							let className =
+								'z-10 aspect-square w-2 h-2 border-1 border-black transition-all duration-300 hover:shadow-[2px_2px__rgba(0,0,0,0.3)]'
+							if (i === index) {
+								className += ' bg-black shadow-[2px_2px__rgba(0,0,0,0.3)]'
+							}
+
+							return (
+								<div
+									className={className}
+									onClick={() => {
+										if (i > index) {
+											setDirection('fromRight')
+										} else {
+											setDirection('fromLeft')
+										}
+										setIndex(i)
+									}}
+									key={i}
+								/>
+							)
+						})}
+					</div>
 				</div>
 			</div>
 		)

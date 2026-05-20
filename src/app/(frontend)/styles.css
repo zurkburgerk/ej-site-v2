@@ -5,10 +5,11 @@
   --foreground: black;
 }
 
-body {
+html, body {
   font-family: var(--font-main);
   background-color: var(--background);
   color: var(--foreground);
+  overscroll-behavior: none;
 }
 
 h1, h2, h3, h4, h5, h6 {

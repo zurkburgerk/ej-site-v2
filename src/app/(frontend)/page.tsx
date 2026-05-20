@@ -21,14 +21,10 @@ export default async function HomePage() {
 	const projects = payloadResult.docs
 
 	return (
-		<div className="flex flex-col h-screen">
+		<div className="flex flex-col h-[100dvh] overflow-hidden">
 			<EntryHeading label="EMON JOHNSON" />
 
-			<div className="grid grid-cols-12 flex-1 overflow-hidden">
-				<div className="col-span-12 sm:col-span-12 overflow-hidden">
-					<ModelCarousel projects={projects} />
-				</div>
-			</div>
+			<ModelCarousel projects={projects} />
 		</div>
 	)
 }

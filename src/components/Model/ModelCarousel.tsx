@@ -1,5 +1,5 @@
 'use client'
-import { ReactElement, Suspense, useEffect, useRef, useState, useCallback } from 'react'
+import { ReactElement, Suspense, useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { Model, Project } from '@/payload-types'
 import { motion } from 'motion/react'
 import { useGLTF } from '@react-three/drei'
@@ -57,17 +57,24 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 		},
 		[slideWidth, maxIndex],
 	)
-	const allModels: Model[] = projects
-		.map((project) => project.model)
-		.filter((model): model is Model => typeof model !== 'number')
+	const allModels: Model[] = useMemo(
+		() =>
+			projects
+				.map((project) => project.model)
+				.filter((model): model is Model => typeof model !== 'number'),
+		[projects],
+	)
 
 	const currentProject = projects[index]
-	const currentProjectModel: Model | null =
-		currentProject && typeof currentProject.model !== 'number' ? currentProject.model : null
+	const currentProjectModel: Model | null = useMemo(
+		() =>
+			currentProject && typeof currentProject.model !== 'number' ? currentProject.model : null,
+		[currentProject],
+	)
 
 	if (currentProject) {
 		return (
-			<div className="grid grid-cols-12 h-full">
+			<div className="grid grid-cols-12 h-full" onWheel={handleWheel}>
 				<div className="col-span-4 h-full flex flex-col justify-center items-center">
 					<motion.div
 						key={index}
@@ -98,7 +105,6 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 				<div
 					ref={containerRef}
 					className="col-span-8 flex flex-col"
-					onWheel={handleWheel}
 					style={{
 						overflow: 'hidden',
 						width: '100%',
@@ -107,7 +113,7 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 						scrollBehavior: 'auto',
 					}}
 				>
-					<PreloadModels models={allModels} />
+					<PreloadModels models={allModels} index={index} />
 
 					<div className="flex-1 w-full">
 						<Link href={'/projects/' + currentProject.slug}>
@@ -152,11 +158,19 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 	}
 }
 
-function PreloadModels({ models }: { models: Model[] }) {
+function PreloadModels({ models, index }: { models: Model[]; index: number }) {
+	const modelsToPreload = useMemo(() => {
+		const preload: Model[] = []
+		if (models[index]) preload.push(models[index])
+		if (models[index - 1]) preload.push(models[index - 1])
+		if (models[index + 1]) preload.push(models[index + 1])
+		return preload
+	}, [models, index])
+
 	useEffect(() => {
-		models.forEach((m) => {
+		modelsToPreload.forEach((m) => {
 			if (m.url) useGLTF.preload(m.url)
 		})
-	}, [models])
+	}, [modelsToPreload])
 	return null
 }

@@ -74,49 +74,28 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 
 	if (currentProject) {
 		return (
-			<div className="grid grid-cols-12 h-full" onWheel={handleWheel}>
-				<div className="col-span-4 h-full flex flex-col justify-center items-center">
+			<div className="flex flex-col md:flex-row h-full w-full" onWheel={handleWheel}>
+				<div className="md:w-1/3 w-full md:h-full flex flex-col justify-center md:items-center flex-shrink-0 md:ml-0 ml-2">
 					<motion.div
 						key={index}
-						initial={
-							direction === 'fromRight'
-								? {
-										opacity: 0,
-										x: 100,
-									}
-								: {
-										opacity: 0,
-										x: -100,
-									}
-						}
-						animate={{
-							opacity: 100,
-							x: 0,
-						}}
-						transition={{
-							duration: 0.5,
-							ease: 'easeOut',
-						}}
+						className="md:mt-0 mt-4"
+						initial={direction === 'fromRight' ? { opacity: 0, x: 100 } : { opacity: 0, x: -100 }}
+						animate={{ opacity: 1, x: 0 }}
+						transition={{ duration: 0.5, ease: 'easeOut' }}
 					>
-						<h2 className="text-4xl">{currentProject.title}</h2>
+						<h2 className="md:text-4xl text-3xl text-orange-500">{currentProject.title}</h2>
 						<p>{currentProject.year}</p>
 					</motion.div>
 				</div>
 				<div
 					ref={containerRef}
-					className="col-span-8 flex flex-col"
-					style={{
-						overflow: 'hidden',
-						width: '100%',
-						height: '100%',
-						position: 'relative',
-						scrollBehavior: 'auto',
-					}}
+					className="md:w-2/3 w-full flex flex-1 flex-col min-h-0 h-full justify-between"
 				>
 					<PreloadModels models={allModels} index={index} />
 
-					<div className="flex-1 w-full">
-						<Link href={'/projects/' + currentProject.slug}>
+					{/* grow forces the canvas wrapper to expand as big as possible */}
+					<div className="w-full flex-grow min-h-0">
+						<Link href={'/projects/' + currentProject.slug} className="block h-full w-full">
 							<ModelCanvas
 								url={currentProjectModel && currentProjectModel.url ? currentProjectModel.url : ''}
 								fadeIn
@@ -126,12 +105,13 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 							/>
 						</Link>
 					</div>
-					<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8">
+
+					<div className="flex flex-row gap-4 items-center justify-center pt-4 pb-8 flex-shrink-0">
 						{projects.map((_, i) => {
 							let className =
-								'z-10 aspect-square w-2 h-2 border-1 border-black transition-all duration-300 hover:shadow-[2px_2px__rgba(0,0,0,0.3)]'
+								'z-10 aspect-square w-4 h-2 border-1 border-black transition-all duration-300 hover:shadow-[2px_2px__rgba(0,0,0,0.3)] cursor-pointer'
 							if (i === index) {
-								className += ' bg-black shadow-[2px_2px__rgba(0,0,0,0.3)]'
+								className += ' bg-orange-500 border-orange-500 shadow-[2px_2px__rgba(0,0,0,0.3)]'
 							}
 
 							return (

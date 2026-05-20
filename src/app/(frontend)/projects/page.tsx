@@ -20,7 +20,7 @@ export default async function Page() {
 				<div className="grid grid-cols-12 gap-4">
 					{docs.map((project, index) => (
 						<div
-							className="col-span-4 hover:text-orange-500 hover:bg-gray-100 transition-colors duration-300 "
+							className="md:col-span-4 col-span-12 hover:text-orange-500 hover:bg-gray-100 transition-colors duration-300 "
 							key={index}
 						>
 							<Link href={'/projects/' + project.slug}>

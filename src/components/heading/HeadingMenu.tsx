@@ -42,7 +42,7 @@ export function HeadingMenu({ children }: HeadingMenuProps) {
 			>
 				{React.Children.map(children, (child, index) => {
 					return (
-						<motion.div key={index} variants={menuItemVariants}>
+						<motion.div key={index} variants={menuItemVariants} className="cursor-pointer">
 							{child}
 						</motion.div>
 					)

@@ -11,9 +11,14 @@ export function HeadingMenu({ children }: HeadingMenuProps) {
 
 	const menuVariants: Variants = {
 		open: {
+			opacity: 1,
+			visibility: 'visible',
+			boxShadow: '15px 0 10px 0px white',
 			transition: { delayChildren: stagger(0.07, { startDelay: 0.2 }) },
 		},
 		closed: {
+			opacity: 0,
+			visibility: 'hidden',
 			transition: { delayChildren: stagger(0.05, { from: 'last' }) },
 		},
 	}
@@ -35,7 +40,7 @@ export function HeadingMenu({ children }: HeadingMenuProps) {
 		<motion.div className="flex flex-row gap-4 pl-2">
 			<MenuToggle onClick={() => setIsOpen(!isOpen)} isOpen={isOpen} />
 			<motion.div
-				className="flex flex-row gap-4"
+				className="flex flex-row gap-4 bg-white z-2000"
 				animate={isOpen ? 'open' : 'closed'}
 				initial="closed"
 				variants={menuVariants}

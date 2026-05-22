@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -10,6 +10,7 @@ export type AnimatedModelProps = {
 	autoRotate?: boolean
 	mouseTrackX?: boolean
 	mouseTrackY?: boolean
+	externalRotation?: RefObject<{ x: number; y: number }>
 }
 
 export default function AnimatedModel({
@@ -19,6 +20,7 @@ export default function AnimatedModel({
 	autoRotate,
 	mouseTrackX,
 	mouseTrackY,
+	externalRotation,
 }: AnimatedModelProps) {
 	const { scene } = useGLTF(url)
 	const groupRef = useRef<THREE.Group>(null)
@@ -83,7 +85,14 @@ export default function AnimatedModel({
 	useFrame((_, delta) => {
 		if (!groupRef.current) return
 
+		const ext = externalRotation?.current
 		const parallaxStrength = 0.1
+
+		if (ext && (ext.x !== 0 || ext.y !== 0)) {
+			console.log(externalRotation)
+			groupRef.current.rotation.x += ext.x
+			groupRef.current.rotation.y += ext.y
+		}
 
 		if (mouseTrackY) {
 			groupRef.current.rotation.y +=

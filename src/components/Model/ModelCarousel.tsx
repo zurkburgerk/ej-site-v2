@@ -19,6 +19,26 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 	const [direction, setDirection] = useState<'fromRight' | 'fromLeft'>('fromRight')
 	const deltaAccumulator = useRef(0)
 	const SCROLL_THRESHOLD = 100
+	const SWIPE_THRESHOLD = 100
+	const [touchStart, setTouchStart] = useState<number | null>(null)
+	const [touchEnd, setTouchEnd] = useState<number | null>(null)
+	const [hintReady, setHintReady] = useState(false)
+
+	useEffect(() => {
+		const alreadyShown = sessionStorage.getItem('carouselHintShown')
+
+		if (alreadyShown) {
+			setHintReady(false) // never show again this session
+			return
+		}
+
+		const handler = () => {
+			sessionStorage.setItem('carouselHintShown', 'true')
+			setHintReady(true)
+		}
+		window.addEventListener('entryAnimationComplete', handler)
+		return () => window.removeEventListener('entryAnimationComplete', handler)
+	}, [])
 
 	useEffect(() => {
 		const updateWidth = () => {
@@ -57,6 +77,33 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 		},
 		[slideWidth, maxIndex],
 	)
+
+	const handleTouchStart = (e: React.TouchEvent) => {
+		setTouchEnd(null)
+		setTouchStart(e.targetTouches[0].clientX)
+	}
+
+	const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX)
+
+	const handleTouchEnd = () => {
+		if (!touchStart || !touchEnd) return
+		const distance = touchStart - touchEnd
+
+		if (distance > SWIPE_THRESHOLD) {
+			//scroll right
+			setDirection('fromRight')
+			setIndex((prev) => {
+				return Math.min(prev + 1, maxIndex)
+			})
+		} else if (distance < -SWIPE_THRESHOLD) {
+			//scroll left
+			setDirection('fromLeft')
+			setIndex((prev) => {
+				return Math.max(prev - 1, 0)
+			})
+		}
+	}
+
 	const allModels: Model[] = useMemo(
 		() =>
 			projects
@@ -89,7 +136,10 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 				</div>
 				<div
 					ref={containerRef}
-					className="md:w-2/3 w-full flex flex-1 flex-col min-h-0 h-full justify-between"
+					onTouchStart={handleTouchStart}
+					onTouchMove={onTouchMove}
+					onTouchEnd={handleTouchEnd}
+					className="md:w-2/3 w-full flex flex-1 flex-col min-h-0 h-full justify-between relative"
 				>
 					<PreloadModels models={allModels} index={index} />
 
@@ -101,6 +151,7 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 								fadeIn
 								autoRotate
 								mouseTrackX
+								touchTrackY
 								transition={direction}
 							/>
 						</Link>
@@ -130,6 +181,16 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 							)
 						})}
 					</div>
+					{hintReady && (
+						<motion.div
+							className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-5 shadow-[8px_8px_rgba(0,0,0,0.2)]"
+							initial={{ opacity: 1 }}
+							animate={{ opacity: 0 }}
+							transition={{ delay: 7, duration: 0.5, ease: 'easeOut' }}
+						>
+							<p className="text-orange-500">SCROLL / SWIPE</p>
+						</motion.div>
+					)}
 				</div>
 			</div>
 		)

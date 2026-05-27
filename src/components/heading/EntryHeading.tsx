@@ -26,7 +26,7 @@ export function EntryHeading({ label }: { label: string }) {
 	}, [])
 
 	if (!ready) {
-		return <StaticHeading label="EMON JOHNSON" />
+		return <StaticHeading label={label} />
 	}
 
 	return (
@@ -79,7 +79,10 @@ export function EntryHeading({ label }: { label: string }) {
 						}}
 						animate={{ opacity: clicked ? [1, 1, 0] : 1 }}
 						transition={{ delay: 3, duration: DURATION, times: TIMES, ease: 'easeOut' }}
-						onClick={() => setClicked(true)}
+						onClick={() => {
+							setClicked(true)
+							window.dispatchEvent(new Event('entryAnimationComplete'))
+						}}
 					/>
 
 					{/* Heading underline */}
@@ -101,15 +104,15 @@ export function EntryHeading({ label }: { label: string }) {
 						transition={{ duration: DURATION, times: TIMES, ease: 'linear' }}
 					>
 						<motion.path
-							d="M-25 0 L25 0 L-25 0 L-25 50 L25 50 L-25 50 L-25 100 L25 100 L25 200 L-25 200 L-25 175"
-							style={{ fill: 'none', stroke: 'white', strokeWidth: 4 }}
-							initial={{ pathLength: 0 }}
-							animate={clicked ? { pathLength: 0 } : { pathLength: 1 }}
+							d="M-25 -100 L25 -100 L-25 -100 L-25 -50 L25 -50 L-25 -50 L-25 0 L25 0 L25 100 L-25 100 L-25 75"
+							style={{ fill: 'none', stroke: 'white' }}
+							initial={{ pathLength: 0, strokeWidth: 4 }}
+							animate={clicked ? { pathLength: 0, strokeWidth: 1 } : { pathLength: 1 }}
 							transition={{ duration: 1.5, ease: 'easeOut' }}
 						/>
 						<motion.path
-							d="M-25 0 L1000 0"
-							style={{ fill: 'none', stroke: 'white', strokeWidth: 4 }}
+							d="M-25 -100 L1000 -100"
+							style={{ fill: 'none', stroke: 'white', strokeWidth: 1, opacity: 1 }}
 							initial={{ pathLength: 0, pathOffset: 0 }}
 							animate={
 								clicked ? { pathLength: [0, 0, 1, 1], pathOffset: [0, 0, 0, 1] } : { pathLength: 0 }

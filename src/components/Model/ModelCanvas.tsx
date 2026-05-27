@@ -2,7 +2,7 @@
 
 import { Canvas, Vector3 } from '@react-three/fiber'
 import AnimatedModel from './AnimatedModel'
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 
 export type ModelCanvasProps = {
 	url: string
@@ -11,6 +11,8 @@ export type ModelCanvasProps = {
 	autoRotate?: boolean
 	mouseTrackX?: boolean
 	mouseTrackY?: boolean
+	touchTrackX?: boolean
+	touchTrackY?: boolean
 	zoomed?: boolean
 }
 
@@ -21,8 +23,11 @@ export default function ModelCanvas({
 	autoRotate,
 	mouseTrackX,
 	mouseTrackY,
+	touchTrackX,
+	touchTrackY,
 	zoomed,
 }: ModelCanvasProps) {
+	const [isFirstVisit, setIsFirstVisit] = useState(false)
 	const cameraPosition: Vector3 = zoomed ? [0, 1.5, 3] : [0, 2, 5]
 	const touchStart = useRef<{ x: number; y: number } | null>(null)
 	const rotation = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
@@ -46,9 +51,16 @@ export default function ModelCanvas({
 			e.preventDefault()
 			if (!touchStart.current) return
 			const t = e.touches[0]
-			const dx = t.clientX - touchStart.current.x
-			const dy = t.clientY - touchStart.current.y
-			console.log(dx + ' ' + dy)
+			var dx = 0
+			var dy = 0
+
+			if (touchTrackX) {
+				dx = t.clientX - touchStart.current.x
+			}
+			if (touchTrackY) {
+				dy = t.clientY - touchStart.current.y
+			}
+
 			rotation.current = { x: dy / 200, y: dx / 200 }
 			touchStart.current = { x: t.clientX, y: t.clientY }
 		}
@@ -65,7 +77,6 @@ export default function ModelCanvas({
 			dpr={[1, 1.5]}
 			onTouchStart={handleTouchStart}
 			onTouchEnd={handleTouchEnd}
-			// key={url}
 		>
 			<ambientLight intensity={3} />
 			<directionalLight position={[5, 10, 5]} intensity={4} castShadow={false} />

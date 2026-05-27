@@ -181,6 +181,7 @@ export interface Project {
   slug: string;
   year: number;
   model: number | Model;
+  description?: string | null;
   content?: {
     root: {
       type: string;
@@ -394,6 +395,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   slug?: T;
   year?: T;
   model?: T;
+  description?: T;
   content?: T;
   meta?:
     | T

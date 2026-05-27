@@ -35,6 +35,8 @@ export default async function Page() {
 										zoomed
 										mouseTrackX
 										mouseTrackY
+										touchTrackX
+										touchTrackY
 									/>
 								</div>
 								<div className="bg-white">

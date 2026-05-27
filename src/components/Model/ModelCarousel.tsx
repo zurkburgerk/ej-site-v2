@@ -132,6 +132,12 @@ export default function ModelCarousel({ projects }: ModelCarouselProps): ReactEl
 					>
 						<h2 className="md:text-4xl text-3xl text-orange-500">{currentProject.title}</h2>
 						<p>{currentProject.year}</p>
+						{currentProject.description && (
+							<div className="hidden md:block">
+								<hr style={{ width: 15 }} />
+								<p>{currentProject.description}</p>
+							</div>
+						)}
 					</motion.div>
 				</div>
 				<div
